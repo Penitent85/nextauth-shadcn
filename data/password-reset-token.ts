@@ -7,6 +7,8 @@ export const getPasswordResetTokenByToken = async (token: string) => {
         token,
       },
     });
+    console.log('-----------------');
+    console.log(passwordResetToken);
     return passwordResetToken;
   } catch (err) {
     return null;
