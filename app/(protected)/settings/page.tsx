@@ -126,7 +126,7 @@ const SettingsPage = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="******"
+                            placeholder="••••••"
                             disabled={isPending}
                             type="password"
                           />
@@ -144,7 +144,7 @@ const SettingsPage = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="******"
+                            placeholder=""
                             disabled={isPending}
                             type="password"
                           />
@@ -157,7 +157,7 @@ const SettingsPage = () => {
               )}
               <FormField
                 control={form.control}
-                name="role" 
+                name="role"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Role</FormLabel>

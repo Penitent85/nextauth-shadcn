@@ -5,16 +5,18 @@ import bcrypt from "bcryptjs";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
+import { getUserByEmail } from "@/data/user";
+import { sendTowFactorTokenEmail, sendVerificationEmail } from "@/lib/mail";
+import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
+import { db } from "@/lib/db";
+import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import {
   generateTwoFactorToken,
   generateVerificationToken,
 } from "@/lib/tokens";
-import { getUserByEmail } from "@/data/user";
-import { sendTowFactorTokenEmail, sendVerificationEmail } from "@/lib/mail";
-import { get } from "http";
-import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import { db } from "@/lib/db";
-import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+
+
+
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -24,6 +26,7 @@ export const login = async (
   if (!validatedField.success) {
     return { error: "Invalid Fields!" };
   }
+  
   const { email, password, code } = validatedField.data;
 
   const existingUser = await getUserByEmail(email);
@@ -85,7 +88,7 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      redirectTo: DEFAULT_LOGIN_REDIRECT || callbackUrl,
     });
   } catch (error) {
     if (error instanceof AuthError) {

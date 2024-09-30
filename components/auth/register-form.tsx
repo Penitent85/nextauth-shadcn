@@ -19,6 +19,7 @@ import { FormSuccess } from "../form-success";
 import { register } from "@/actions/register";
 import { useState, useTransition } from "react";
 
+// ==================================== //
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -54,9 +55,9 @@ export const RegisterForm = () => {
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
           <div className=" space-y-4">
             <FormField
-              control={form.control}
+              control={form.control} 
               name="name"
-              render={({ field }) => (
+              render={({ field }) => ( 
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
@@ -99,7 +100,7 @@ export const RegisterForm = () => {
                     <Input
                       {...field}
                       disabled={isPending}
-                      placeholder="******"
+                      placeholder="••••••"
                       type="password"
                     />
                   </FormControl>

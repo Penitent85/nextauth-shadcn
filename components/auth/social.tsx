@@ -1,6 +1,8 @@
 "use client";
-import { FaFacebook, FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import { FaFacebook, FaGithub , FaGoogle } from "react-icons/fa";
+
+
+
 
 
 import { Button } from "../ui/button";
@@ -24,7 +26,7 @@ const Social = () => {
         variant="outline"
         onClick={() => onClick("google")}
       >
-        <FcGoogle className="w-5 h-5" />
+        <FaGoogle className="w-5 h-5" />
       </Button>
       <Button
         size="lg"
