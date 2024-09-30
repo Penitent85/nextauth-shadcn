@@ -29,7 +29,7 @@ export const LoginForm = () => {
 
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Account already in use with another provider"
+      ? "Email is already in use with another provider"
       : "";
   const [showTowFactor, setShowTowFactor] = useState(false);
 

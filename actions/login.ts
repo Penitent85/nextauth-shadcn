@@ -16,23 +16,28 @@ import {
 } from "@/lib/tokens";
 
 
-
-
 export const login = async (
   values: z.infer<typeof LoginSchema>,
   callbackUrl?: string
 ) => {
+  // validate fields with schema
+
   const validatedField = LoginSchema.safeParse(values);
   if (!validatedField.success) {
     return { error: "Invalid Fields!" };
   }
-  
+ 
+  // destructure validated fields
   const { email, password, code } = validatedField.data;
 
+
+  // check if user exists
   const existingUser = await getUserByEmail(email);
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: "Email Does not Exist! " };
   }
+  // check if email is verified
+  // if not, send verification email
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(
       existingUser.email
@@ -42,10 +47,12 @@ export const login = async (
       verificationToken.token
     );
     return { success: "Email Confirmation Sent" };
-  }
-
+  } 
+  // check if 2fa is enabled
   if (existingUser.isTowFactorEnabled && existingUser.email) {
+    // if code is provided
     if (code) {
+      console.log('first')
       // add 2fa check here
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
       if (!twoFactorToken) {
@@ -75,7 +82,10 @@ export const login = async (
           userId: existingUser.id,
         },
       });
-    } else {
+    } 
+    // if code is not provided
+    else {
+      //  user with code and data
       const twoFactorToken = await generateTwoFactorToken(existingUser.email);
       await sendTowFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
       // return { success: "Two Factor Token Sent" };
@@ -88,7 +98,7 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT || callbackUrl,
+      redirectTo:  DEFAULT_LOGIN_REDIRECT || callbackUrl,
     });
   } catch (error) {
     if (error instanceof AuthError) {

@@ -6,11 +6,13 @@ import { getUserById } from "./data/user";
 import { UserRole } from "@prisma/client";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 import { getAccountByUserId } from "./data/account";
-
-export const { handlers, signIn, signOut ,auth  } = NextAuth({
+ 
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
+    
   },
   events: {
     async linkAccount({ user }) {
@@ -24,8 +26,14 @@ export const { handlers, signIn, signOut ,auth  } = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
+      // NOTE: user id = token.sub 
+
+      // check if it provider is not credentials
       if (account?.provider !== "credentials") return true;
+      // check if user exists
       const existingUser = await getUserById(user.id as string);
+  
+      // prevent login if email is not verified
       if (!existingUser?.emailVerified) return false;
       // add 2fa check here
       if (existingUser.isTowFactorEnabled) {
@@ -41,8 +49,8 @@ export const { handlers, signIn, signOut ,auth  } = NextAuth({
       }
       return true;
     },
-    async session({ session, token }) {
-      console.log({ sessionToken: token });
+    // session  that will be returned to the client
+    async session({ session, token }) { 
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -60,8 +68,10 @@ export const { handlers, signIn, signOut ,auth  } = NextAuth({
       return session;
     },
     async jwt({ token }) {
-      if (!token.sub) return token;
 
+      // for google, facebook, github no sub
+      // token.sub is the user id
+      if (!token.sub) return token;
       const existingUser = await getUserById(token.sub);
       if (!existingUser) return token;
       const existingAccount = await getAccountByUserId(existingUser.id);
@@ -71,7 +81,8 @@ export const { handlers, signIn, signOut ,auth  } = NextAuth({
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTowFactorEnabled;
       return token;
-    },
+    }
+    
   },
 
   adapter: PrismaAdapter(db),

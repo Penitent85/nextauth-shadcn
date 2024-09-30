@@ -17,7 +17,7 @@ model User {
   role                  UserRole               @default(USER)
   isTowFactorEnabled    Boolean                @default(true)
   accounts              Account[]
-  twoFactorConfirmation TwoFactorConformation?
+  twoFactorConfirmation TwoFactorConformation? 
 }
 
 model Account {

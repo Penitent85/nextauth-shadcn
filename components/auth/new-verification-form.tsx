@@ -46,7 +46,7 @@ const NewVerificationForm = () => {
           {!success && <FormError message={error} />}
         </div>
 
-        <h1>Tokennnn: {token}</h1>
+         
       </CardWrapper>
     </div>
   );
